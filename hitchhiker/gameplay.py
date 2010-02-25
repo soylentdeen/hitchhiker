@@ -210,10 +210,10 @@ class Round( object ):
             if not self.bid:
                 return None
 
-        # associate the details of the bid
-        bid = self.bid.bid
+        # identify the number of marks for this hand, then normalize the bid value
+        target = self.bid.bid
         if bid > 42:
-            self.marks = bid / 42
+            self.marks, target = target / 42, 42
 
         # play tricks until the round is complete
         player = self.bid.player
@@ -233,11 +233,11 @@ class Round( object ):
 
             # associate the trick with this round and determine if the round is over
             self.tricks.append( trick )
-            if self.points_made >= bid:
+            if self.points_made >= target:
                 print 'BID WAS MADE'
                 self.status = 'made'
                 break
-            elif self.points_set >= ( 43 - bid ):
+            elif self.points_set >= ( 43 - target ):
                 print 'BID WAS SET'
                 self.status = 'set'
                 break
