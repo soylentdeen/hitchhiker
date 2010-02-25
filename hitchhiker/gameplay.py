@@ -87,6 +87,7 @@ class Round( object ):
         self.bid = bid
         self.game = game
         self.id = id
+        self.marks = 1
         self.players = players
         self.trick = 0
         self.tricks = []
@@ -95,11 +96,19 @@ class Round( object ):
 class Game( object ):
     """A game."""
 
-    def __init__( self, players ):
+
+    def __init__( self, teams, deck, players = None ):
         """Constructor."""
 
-        self.players = players
+        self.deck = deck
+        self.players = players or self.seat( teams )
         self.rounds = []
+        self.teams = teams
+
+    def seat( self, teams ):
+        """Determines a suitable seating order for the specified teams."""
+
+        
 
 
 if __name__ == '__main__':
