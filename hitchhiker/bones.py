@@ -1,5 +1,5 @@
 
-from random import SystemRandom
+from hitchhiker.util import shuffle
 
 Bones = {}
 Deck = []
@@ -12,6 +12,7 @@ class Bone( object ):
         def __repr__( cls ):
             return "%s(%dpt)" % ( cls.__name__, cls.value )
 
+    double = False
     identity = ()
     rank = {}
     suits = ()
@@ -29,6 +30,7 @@ class Bone( object ):
         """Constructs a version of this class for the specified bone."""
 
         return type( '%s%s' % ( cls.terms[ t ], cls.terms[ b ] ), ( cls, ), {
+            'double': ( t == b ),
             'identity': ( t, b ),
             'rank': ( { t: 7 } if t == b else { t: b, b: t } ),
             'value': ( t + b if ( t + b ) % 5 == 0 else 0 ),
@@ -128,7 +130,7 @@ class RandomDeck( object ):
         self.handsize = handsize
         self.multiplier = multiplier
 
-    def deal( self, shuffle = SystemRandom().shuffle ):
+    def deal( self ):
         """Deals hands in random order."""
 
         # shuffle a new deck of bones

@@ -1,4 +1,7 @@
 
+from hitchhiker.bones import RandomDeck
+from hitchhiker.util import shuffle
+
 class Play( object ):
     """A played bone."""
 
@@ -10,15 +13,7 @@ class Play( object ):
         self.player = player
         self.role = 'unknown'
         self.trick = trick
-        self.trump = False
-
-        trump = trick.round.trump
-        if trump and bone in trump.bones:
-            self.suit, self.trump = trump, True
-        elif trick.suit and bone in trick.suit.bones:
-            self.suit = trick.suit
-        else:
-            self.suit = bone.suits[ 0 ]
+        self.suit, self.trump = trick.round.contract.identify( trick, bone )
 
     def __repr__( self ):
         """String representation."""
@@ -54,26 +49,11 @@ class Trick( object ):
         # construct the play and associate it with the trick
         play = Play( self, len( self.plays ) + 1, player, bone )
         self.plays.append( play )
-        self.value += bone.value
 
         # determine the effects of the play
-        trump, winner = self.round.trump, self.winning_play
-        if winner:
-            if play.trump:
-                if self.suit is trump:
-                    play.role = 'suit'
-                    if trump.higher( play.bone, winner.bone ):
-                        self.winning_play, self.winning_player = play, player
-                else:
-                    play.role = 'trump'
-                    if not winner.trump or trump.higher( play.bone, winner.bone ):
-                        self.winning_play, self.winning_player = play, player
-            elif play.suit is self.suit:
-                play.role = 'suit'
-                if self.suit.higher( play.bone, winner.bone ):
-                    self.winning_play, self.winning_player = play, player
-            else:
-                play.role = 'off'
+        self.value += bone.value
+        if self.winning_play:
+            self.round.contract.adjudicate( self, player, play )
         else:
             play.role = 'suit'
             self.suit, self.winning_play, self.winning_player = play.suit, play, player
@@ -81,42 +61,43 @@ class Trick( object ):
 class Round( object ):
     """A round."""
 
-    def __init__( self, game, id, players, bid = None, trump = None ):
+    def __init__( self, game, id, players, bid = None, contract = None ):
         """Constructor."""
 
         self.bid = bid
+        self.contract = contract
         self.game = game
         self.id = id
         self.marks = 1
         self.players = players
         self.trick = 0
         self.tricks = []
-        self.trump = trump
 
 class Game( object ):
     """A game."""
 
+    DefaultDeck = RandomDeck
 
-    def __init__( self, teams, deck, players = None ):
+    def __init__( self, home, away, deck = None, players = None ):
         """Constructor."""
 
-        self.deck = deck
-        self.players = players or self.seat( teams )
+        self.away = away
+        self.deck = deck or self.DefaultDeck()
+        self.home = home
+        self.players = players or self.seat( home, away )
         self.rounds = []
-        self.teams = teams
 
-    def seat( self, teams ):
+    def seat( self, home, away ):
         """Determines a suitable seating order for the specified teams."""
 
-        
+        # shuffle the set of players for this game
+        players = [ home.shuffled_players, away.shuffled_players ]
+        shuffle( players )
 
+        # generate the seating order for this game
+        seating = []
+        for pair in zip( *players ):
+            seating.extend( pair )
+        else:
+            return seating
 
-if __name__ == '__main__':
-    from deck import Suits, Bones
-    r = Round( None, 1, ( 1, 2, 3, 4 ), trump = Suits['sixes'] )
-    t1 = Trick( r, 1, ( 1, 2, 3, 4 ) )
-    t1.play( 1, Bones[(6,4)]() )
-    t1.play( 2, Bones[(5,3)]() )
-    t1.play( 3, Bones[(6,3)]() )
-    t1.play( 4, Bones[(6,6)]() )
-    print t1
