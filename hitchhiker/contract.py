@@ -1,4 +1,15 @@
 
+class Bid( object ):
+    """A bid."""
+
+    def __init__( self, player, contract, bid ):
+        """Constructor."""
+
+        self.bid = bid
+        self.contract = contract
+        self.player = player
+        self.zerosum = ( bid >= 42 )
+
 class Contract( object ):
     """A contract."""
 
@@ -31,7 +42,7 @@ class TrumpContract( Contract ):
                     trick.winning_play, trick.winning_player = play, player
         elif play.suit is trick.suit:
             play.role = 'suit'
-            if trick.suit.higher( play.bone, winner.bone ):
+            if not winner.trump and trick.suit.higher( play.bone, winner.bone ):
                 trick.winning_play, trick.winning_player = play, player
         else:
             play.role = 'off'
@@ -39,9 +50,9 @@ class TrumpContract( Contract ):
     def identify( self, trick, bone ):
         """Identifies the suit and trump status of the specified bone in the specified trick."""
 
-        if bone in self.trump.bones:
+        if self.trump.includes( bone ):
             return self.trump, True
-        elif trick.suit and bone in trick.suit.bones:
+        elif trick.suit and trick.suit.includes( bone ):
             return trick.suit, False
         else:
             return bone.suits[ 0 ], False
@@ -68,7 +79,7 @@ class NoTrumpContract( Contract ):
     def identify( self, trick, bone ):
         """Identifies the suit and trump status of the specified bone in the specified trick."""
 
-        if trick.suit and bone in trick.suit.bones:
+        if trick.suit and trick.suit.includes( bone ):
             return trick.suit, False
         else:
             return bone.suits[ 0 ], False

@@ -71,6 +71,12 @@ class Suit( object ):
 
         return cls.bones.index( type( first ) ) < cls.bones.index( type( second ) )
 
+    @classmethod
+    def includes( cls, bone ):
+        """Determines if the specified bone is part of this suit."""
+
+        return ( type( bone ) in cls.bones )
+
 @suit
 class Sixes( Suit ):
     bones = ( (6,6), (6,5), (6,4), (6,3), (6,2), (6,1), (6,0) )

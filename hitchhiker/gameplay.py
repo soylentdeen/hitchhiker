@@ -1,19 +1,116 @@
 
-from hitchhiker.bones import RandomDeck
-from hitchhiker.util import shuffle
+from hitchhiker.bones import RandomDeck, Suits
+from hitchhiker.contract import Bid, TrumpContract
+from hitchhiker.util import reorder, shuffle
+
+class Player( object ):
+    """A player in a particular game."""
+
+    def __init__( self, team, name, controller ):
+        """Constructor."""
+
+        self.controller = controller
+        self.hand = None
+        self.name = name
+        self.team = team
+
+    def __repr__( self ):
+        return 'Player(%s)' % self.name
+
+    def __str__( self ):
+        return self.name
+
+    def offer( self, round ):
+        """Offer a bid for the specified round."""
+
+        print
+        print '%s has: %s' % ( self.name, self.hand.dump() )
+        bid = raw_input( 'Bid (enter to pass): ' )
+        if bid:
+            trump = raw_input( 'Trump: ' )
+            return Bid( self, TrumpContract( Suits[ trump ] ), int( bid ) )
+
+    def play( self, trick ):
+        """Plays a bone in the specified trick."""
+
+        print
+        print 'trick is: %s' % ( trick.dump() )
+        print '%s has: %s' % ( self.name, self.hand.dump() )
+        identity = eval( raw_input( 'Play: ' ) )
+
+        bone = self.hand.play( identity )
+        return bone       
+
+class Team( object ):
+    """A team in a particular game."""
+
+    def __init__( self, name ):
+        """Constructor."""
+
+        self.name = name
+        self.players = []
+
+    def __repr__( self ):
+        return 'Team( %s: %s )' % ( self.name, ', '.join([ str( player ) for player in  self.players ]) )
+
+    def __str__( self ):
+        return self.name
+
+    @property
+    def shuffled_players( self ):
+        """A list of players for this team in random order."""
+
+        players = list( self.players )
+        shuffle( players )
+        return players
+
+    def add( self, name, controller ):
+        """Adds a player to this team."""
+
+        self.players.append( Player( self, name, controller ) )
+
+class Hand( object ):
+    """A hand of bones for a particular round."""
+
+    def __init__( self, round, player, hand ):
+        """Constructor."""
+
+        self.bones = hand
+        self.hand = dict( ( bone.identity, bone ) for bone in hand )
+        self.player = player
+        self.round = round
+
+    def __repr__( self ):
+        """String representation."""
+
+        bones = ' '.join([ repr( bone ) for bone in self.bones ])
+        return 'Hand( %s %s )' % ( self.player, bones )
+
+    def dump( self ):
+        return ' '.join([ repr( bone ) for bone in self.hand.itervalues() ])
+
+    def play( self, identity ):
+        """Plays a bone from this hand."""
+
+        bone = self.hand.pop( identity, None )
+        if bone:
+            return bone
+        else:
+            raise KeyError( 'invalid bone' )
 
 class Play( object ):
-    """A played bone."""
+    """A played bone in a particular trick."""
 
-    def __init__( self, trick, id, player, bone ):
+    def __init__( self, trick, id, player, bone, suit, trump ):
         """Constructor."""
 
         self.bone = bone
         self.id = id
         self.player = player
         self.role = 'unknown'
+        self.suit = suit
         self.trick = trick
-        self.suit, self.trump = trick.round.contract.identify( trick, bone )
+        self.trump = trump
 
     def __repr__( self ):
         """String representation."""
@@ -22,7 +119,7 @@ class Play( object ):
             self.id, self.bone, self.role, self.player )
 
 class Trick( object ):
-    """A trick."""
+    """A trick in a particular round."""
 
     def __init__( self, round, id, players ):
         """Constructor."""
@@ -43,35 +140,107 @@ class Trick( object ):
         return 'Trick( r%d:t%d [ %s ] won by %s with %r for %dpt )' % ( self.round.id,
             self.id, plays, self.winning_player, self.winning_play.bone, self.value )
 
+    def dump( self ):
+        return ' '.join([ repr( play.bone ) for play in self.plays ])
+
     def play( self, player, bone ):
         """Plays the specified bone in this trick."""
 
         # construct the play and associate it with the trick
-        play = Play( self, len( self.plays ) + 1, player, bone )
+        suit, trump = self.round.bid.contract.identify( self, bone )
+        play = Play( self, len( self.plays ) + 1, player, bone, suit, trump )
         self.plays.append( play )
 
         # determine the effects of the play
         self.value += bone.value
         if self.winning_play:
-            self.round.contract.adjudicate( self, player, play )
+            self.round.bid.contract.adjudicate( self, player, play )
+            print 'bone is a %s' % play.role
         else:
             play.role = 'suit'
             self.suit, self.winning_play, self.winning_player = play.suit, play, player
+            print 'trick suit is %s' % self.suit.identity
 
 class Round( object ):
-    """A round."""
+    """A round in a particular game."""
 
-    def __init__( self, game, id, players, bid = None, contract = None ):
+    def __init__( self, game, id, players, bid = None ):
         """Constructor."""
-
+    
         self.bid = bid
-        self.contract = contract
         self.game = game
+        self.hands = []
         self.id = id
         self.marks = 1
         self.players = players
-        self.trick = 0
+        self.points_made = 0
+        self.points_set = 0
+        self.status = 'unknown'
         self.tricks = []
+
+    @property
+    def points_to_make( self ):
+        """Indicates the points remaining for this bid to be made."""
+        return self.bid.bid - self.points_made
+
+    @property
+    def points_to_set( self ):
+        """Indicates the points remaining for this bid to be set."""
+        return ( 43 - self.bid.bid ) - self.points_set
+
+    def deal( self ):
+        """Deals a hand to each player in this round."""
+
+        hands = self.game.deck.deal()
+        for hand, player in zip( hands, self.players ):
+            player.hand = Hand( self, player, hand )
+            self.hands.append( player.hand )
+
+    def run( self ):
+        """Runs this round."""
+
+        # deal a hand to each player, then collect the bids
+        print '%r vs. %r' % ( self.game.home, self.game.away )
+        self.deal()
+        for player in self.players:
+            bid = player.offer( self )
+            if bid:
+                self.bid = bid
+        else:
+            if not self.bid:
+                return None
+
+        # associate the details of the bid
+        bid = self.bid.bid
+        if bid > 42:
+            self.marks = bid / 42
+
+        # play tricks until the round is complete
+        player = self.bid.player
+        while True:
+
+            # create the next trick and request a play from each player
+            trick = Trick( self, len( self.tricks ) + 1, reorder( self.players, player ) )
+            for player in trick.players:
+                trick.play( player, player.play( trick ) )
+
+            # reference the winning player and update the points totals
+            player = trick.winning_player
+            if player.team is self.bid.player.team:
+                self.points_made += trick.value
+            else:
+                self.points_set += trick.value
+
+            # associate the trick with this round and determine if the round is over
+            self.tricks.append( trick )
+            if self.points_made >= bid:
+                print 'BID WAS MADE'
+                self.status = 'made'
+                break
+            elif self.points_set >= ( 43 - bid ):
+                print 'BID WAS SET'
+                self.status = 'set'
+                break
 
 class Game( object ):
     """A game."""
