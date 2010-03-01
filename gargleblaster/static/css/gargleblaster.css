@@ -1,0 +1,405 @@
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, code,
+del, dfn, em, img, q, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, dialog, figure, footer, header,
+hgroup, nav, section {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: 100%;
+  font-family: inherit;
+  vertical-align: baseline;
+}
+
+article, aside, dialog, figure, footer, header,
+hgroup, nav, section {
+    display:block;
+}
+
+table {
+  border: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+}
+
+table, td, th {
+  vertical-align: middle;
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+  content: "";
+}
+
+blockquote, q {
+  quotes: "" "";
+}
+
+a img {
+  border: none;
+}
+
+body {
+  color: #1f1e1b;
+  background-color: #cdc8b1;
+  font-size: 12px;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #111;
+  font-weight: normal;
+}
+
+.navigation-bar {
+  background-color: #bfbba7;
+  height: 46px;
+  left: 8px;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.held-bone {
+  position: absolute;
+}
+
+#top-held-bone-1 { left: 52px; top: 12px; }
+#top-held-bone-2 { left: 124px; top: 12px; }
+#top-held-bone-3 { left: 196px; top: 12px; }
+#top-held-bone-4 { left: 12px; top: 54px; }
+#top-held-bone-5 { left: 84px; top: 54px; }
+#top-held-bone-6 { left: 156px; top: 54px; }
+#top-held-bone-7 { left: 226px; top: 54px; }
+
+#right-held-bone-1 { left: 12px; top: 12px; }
+#right-held-bone-2 { left: 12px; top: 84px; }
+#right-held-bone-3 { left: 12px; top: 156px; }
+#right-held-bone-4 { left: 12px; top: 226px; }
+#right-held-bone-5 { left: 54px; top: 52px; }
+#right-held-bone-6 { left: 54px; top: 124px; }
+#right-held-bone-7 { left: 54px; top: 196px; }
+
+#bottom-held-bone-1 { left: 12px; top: 12px; }
+#bottom-held-bone-2 { left: 84px; top: 12px; }
+#bottom-held-bone-3 { left: 156px; top: 12px; }
+#bottom-held-bone-4 { left: 226px; top: 12px; }
+#bottom-held-bone-5 { left: 52px; top: 54px; }
+#bottom-held-bone-6 { left: 124px; top: 54px; }
+#bottom-held-bone-7 { left: 196px; top: 54px; }
+
+#left-held-bone-1 { left: 54px; top: 12px; }
+#left-held-bone-2 { left: 54px; top: 84px; }
+#left-held-bone-3 { left: 54px; top: 156px; }
+#left-held-bone-4 { left: 54px; top: 226px; }
+#left-held-bone-5 { left: 12px; top: 52px; }
+#left-held-bone-6 { left: 12px; top: 124px; }
+#left-held-bone-7 { left: 12px; top: 196px; }
+
+.racked-bone {
+  height: 48px;
+  position: absolute;
+  width: 24px;
+}
+
+.racked-bone-1 { left: 0px; }
+.racked-bone-2 { left: 28px; }
+.racked-bone-3 { left: 56px; }
+.racked-bone-4 { left: 84px; }
+
+.played-bone {
+  position: absolute;
+}
+
+#top-played-bone { left: 120px; top: 24px; }
+#right-played-bone { left: 246px; top: 120px; }
+#bottom-played-bone { left: 120px; top: 246px; }
+#left-played-bone { left: 24px; top: 120px; }
+
+.player-bid {
+  color: #cdc8b1;
+  cursor: default;
+  font-size: 360%;
+  font-weight: bold;
+  position: absolute;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+#top-player-bid {
+  text-align: center;
+  top: 8px;
+  width: 300px;
+}
+
+#right-player-bid {
+  bottom: 0;
+  height: 50px;
+  margin: auto;
+  right: 18px;
+  text-align: right;
+  top: 0;
+}
+
+#bottom-player-bid {
+  bottom: 8px;
+  text-align: center;
+  width: 300px;
+}
+
+#left-player-bid {
+  bottom: 0;
+  height: 50px;
+  margin: auto;
+  left: 18px;
+  top: 0;
+}
+
+.team {
+  height: 276px;
+  position: absolute;
+  width: 248px;
+}
+
+.team-left { left: 8px; top: 62px; }
+.team-right { right: 8px; top: 62px; }
+
+.team-avatar {
+  background-color: #afab99;
+  border: 1px solid #afab99;
+  cursor: pointer;
+  height: 44px;
+  position: absolute;
+  width: 192px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.team-avatar:hover {
+  background-color: #bfb483;
+  border: 1px solid #6f6a53;
+}
+
+.team-avatar img, .team-avatar div {
+  position: absolute;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+.team-name {
+  font-size: 130%;
+  font-weight: bold;
+}
+
+.team-avatar-left { left: 0px; top: 0px; }
+.team-avatar-left img { left: 5px; top: 5px; }
+.team-avatar-left div { left: 48px; top: 5px; }
+
+.team-avatar-right { right: 0px; top: 0px; text-align: right; }
+.team-avatar-right img { right: 5px; top: 5px; }
+.team-avatar-right div { right: 48px; top: 5px; }
+
+.team-score {
+  background-color: #afab99;
+  height: 46px;
+  position: absolute;
+  text-align: center;
+  width: 46px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.team-score p {
+  font-size: 26px;
+  font-weight: bold;
+  padding-top: 9px;
+}
+
+.team-score-left { left: 202px; top: 0px; }
+.team-score-right { right: 202px; top: 0px; }
+
+.team-rack {
+  background-color: #bfbba7;
+  height: 222px;
+  position: absolute;
+  width: 120px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.team-rack div {
+  position: absolute;
+}
+
+.team-rack-left-first { left: 0px; top: 54px; }
+.team-rack-left-second { left: 128px; top: 54px; }
+.team-rack-right-first { right: 0px; top: 54px; }
+.team-rack-right-second { right: 128px; top: 54px; }
+
+.team-rack-1, .team-rack-5 { left: 6px; top: 6px; }
+.team-rack-2, .team-rack-6 { left: 6px; top: 60px; }
+.team-rack-3, .team-rack-7 { left: 6px; top: 114px; }
+.team-rack-4 { left: 6px; top: 168px; }
+
+.playing-area {
+  height: 616px;
+  position: absolute;
+  top: 62px;
+  width: 616px;
+}
+
+.round-info {
+  background-color: #bfbba7;
+  cursor: pointer;
+  height: 96px;
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  width: 96px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.round-info p {
+  position: absolute;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+#round-info-bid-value {
+  color: #cdc8b1;
+  font-size: 360%;
+  font-weight: bold;
+
+}
+
+.playing-table {
+  background-color: #afab99;
+  height: 300px;
+  left: 158px;
+  position: absolute;
+  top: 158px;
+  width: 300px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.avatar {
+  background-color: #afab99;
+  border: 1px solid #afab99;
+  cursor: pointer;
+  position: absolute;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.avatar:hover {
+  background-color: #bfb483;
+  border: 1px solid #6f6a53;
+}
+
+.avatar img, .avatar div {
+  position: absolute;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+.avatar-rank {
+  color: #5f5d53;
+  font-size: 70%;
+  font-weight: bold;
+  vertical-align: top;
+}
+
+.avatar-name {
+  font-size: 130%;
+  font-weight: bold;
+}
+
+.avatar-top { height: 44px;  left: 158px; top: 0px; width: 300px; }
+.avatar-top img { left: 5px; top: 5px; }
+.avatar-top div { left: 47px; top: 5px; }
+
+.avatar-right { height: 300px; left: 570px; top: 158px; width: 44px; }
+.avatar-right img { left: 5px; top: 5px; }
+.avatar-right div {
+  left: 6px;
+  top: 14px;
+  white-space: nowrap;
+  -moz-transform: rotate( 90deg );
+  -moz-transform-origin: left bottom;
+  -webkit-transform: rotate( 90deg );
+  -webkit-transform-origin: left bottom;
+
+}
+
+.avatar-bottom { height: 44px; left: 158px; top: 570px; width: 300px; }
+.avatar-bottom img { right: 5px; top: 5px; }
+.avatar-bottom div { right: 47px; text-align: right; top: 5px; }
+
+.avatar-left { height: 300px; left: 0px; top: 158px; width: 44px; }
+.avatar-left img { bottom: 5px; left: 5px; }
+.avatar-left div {
+  bottom: 14px;
+  left: 5px;
+  position: absolute;
+  white-space: nowrap;
+  -moz-transform: rotate( -90deg );
+  -moz-transform-origin: left top;
+  -webkit-transform: rotate( -90deg );
+  -webkit-transform-origin: left top;
+}
+
+.hand {
+  background-color: #bfbba7;
+  position: absolute;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.hand-top { height: 96px; left: 158px; width: 300px; top: 54px; }
+.hand-right { height: 300px; left: 466px; top: 158px; width: 96px; }
+.hand-bottom { height: 96px; left: 158px; width: 300px; top: 466px; }
+.hand-left { height: 300px; left: 54px; top: 158px; width: 96px; }
+
+.chat-block {
+  height: 332px;
+  left: 8px;
+  position: absolute;
+  top: 346px;
+  width: 248px;
+}
+
+.chat-messages {
+  background-color: #bfbba7;
+  height: 278px;
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  width: 248px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.chat-input {
+  background-color: #afab99;
+  height: 46px;
+  left: 0px;
+  position: absolute;
+  top: 286px;
+  width: 248px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}

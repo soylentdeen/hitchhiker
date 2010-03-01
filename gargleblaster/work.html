@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+  <link rel="stylesheet" type="text/css" href="static/css/hitchhiker.css"/>
+  <script type="text/javascript" src="static/js/jquery.min.js"></script>
+  <script type="text/javascript" src="static/js/jquery.ui.min.js"></script>
+  <script type="text/javascript" src="static/js/jquery.tools.min.js"></script>
+
+  <script type="text/javascript">
+    $( function() {
+      var playarea = $( '#playing-area' );
+      playarea.css( 'left', ( $( document ).width() / 2 ) - ( playarea.width() / 2 ) );
+      $('#left-team-avatar').click( function( event ) {
+        alert( 'here' );
+      } );
+      for( var i = 1; i <= 7; i++ ) {
+        var bone = $( '#bottom-held-bone-' + i );
+        bone.draggable( {
+          containment: 'parent',
+          distance: 5,
+          revert: true,
+          revertDuration: 250,
+          zIndex: 1000
+        } );
+        bone.droppable( {
+          accept: '.held-bone',
+          tolerance: 'pointer',
+          drop: function( event, ui ) {
+            var src = $( this ).attr( 'src' );
+            $( this ).attr( 'src', ui.draggable.attr( 'src' ) );
+            ui.draggable.attr( 'src', src );
+          }
+        } );
+      }
+    } );
+  </script>
+
+</head>
+<body>
+
+  <div id="navigation-bar" class="navigation-bar">
+
+  </div>
+
+  <div id="left-team" class="team team-left">
+    <div id="left-team-avatar" class="team-avatar team-avatar-left">
+      <img src="http://www.gravatar.com/avatar/04f6da4cbd71df88d2d8f05f1de8d94f?d=identicon&s=34"/>
+      <div>
+        <p id="left-team-name" class="team-name">Team Awesome</p>
+        <p id="left-team-players" class="team-players">Jordan & Casey</p>
+      </div>
+    </div>
+    <div id="left-team-score" class="team-score team-score-left">
+      <p id="left-team-score">0</p>
+    </div>
+    <div id="left-team-rack-first" class="team-rack team-rack-left-first">
+      <div id="left-team-rack-1" class="team-rack-1">
+        <img id="left-racked-1-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="left-racked-1-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="left-racked-1-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="left-racked-1-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+      <div id="left-team-rack-2" class="team-rack-2">
+        <img id="left-racked-2-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="left-racked-2-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="left-racked-2-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="left-racked-2-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+      <div id="left-team-rack-3" class="team-rack-3">
+        <img id="left-racked-3-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="left-racked-3-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="left-racked-3-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="left-racked-3-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+      <div id="left-team-rack-4" class="team-rack-4">
+        <img id="left-racked-4-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="left-racked-4-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="left-racked-4-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="left-racked-4-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+    </div>
+    <div id="left-team-rack-second" class="team-rack team-rack-left-second">
+      <div id="left-team-rack-5" class="team-rack-5">
+        <img id="left-racked-5-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="left-racked-5-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="left-racked-5-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="left-racked-5-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+      <div id="left-team-rack-6" class="team-rack-6">
+        <img id="left-racked-6-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="left-racked-6-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="left-racked-6-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="left-racked-6-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+      <div id="left-team-rack-7" class="team-rack-7">
+        <img id="left-racked-7-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="left-racked-7-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="left-racked-7-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="left-racked-7-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+    </div>
+  </div>
+
+  <div id="right-team" class="team team-right">
+    <div id="right-team-avatar" class="team-avatar team-avatar-right">
+      <img src="http://www.gravatar.com/avatar/c7aafa324f93c286092d3b49a5b3732e?d=identicon&s=34"/>
+      <div>
+        <p id="right-team-name" class="team-name">Team Not</p>
+        <p id="right-team-players" class="team-players">Shola & Terry</p>
+      </div>
+    </div>
+    <div id="right-team-score" class="team-score team-score-right"><p>0<p></div>
+    <div id="right-team-rack-first" class="team-rack team-rack-right-first">
+      <div id="right-team-rack-1" class="team-rack-1">
+        <img id="right-racked-1-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="right-racked-1-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="right-racked-1-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="right-racked-1-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+      <div id="right-team-rack-2" class="team-rack-2">
+        <img id="right-racked-2-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="right-racked-2-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="right-racked-2-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="right-racked-2-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+      <div id="right-team-rack-3" class="team-rack-3">
+        <img id="right-racked-3-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="right-racked-3-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="right-racked-3-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="right-racked-3-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+      <div id="right-team-rack-4" class="team-rack-4">
+        <img id="right-racked-4-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="right-racked-4-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="right-racked-4-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="right-racked-4-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+    </div>
+    <div id="right-team-rack-second" class="team-rack team-rack-right-second">
+      <div id="right-team-rack-5" class="team-rack-5">
+        <img id="right-racked-5-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="right-racked-5-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="right-racked-5-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="right-racked-5-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+      <div id="right-team-rack-6" class="team-rack-6">
+        <img id="right-racked-6-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="right-racked-6-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="right-racked-6-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="right-racked-6-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+      <div id="right-team-rack-7" class="team-rack-7">
+        <img id="right-racked-7-1" class="racked-bone racked-bone-1" src="static/bones/n64.png"/>
+        <img id="right-racked-7-2" class="racked-bone racked-bone-2" src="static/bones/n66.png"/>
+        <img id="right-racked-7-3" class="racked-bone racked-bone-3" src="static/bones/n63.png"/>
+        <img id="right-racked-7-4" class="racked-bone racked-bone-4" src="static/bones/n32.png"/>
+      </div>
+    </div>
+  </div>
+
+  <div id="playing-area" class="playing-area">
+    <div id="playing-table" class="playing-table">
+      <div id="player-bids">
+        <div id="top-player-bid" class="player-bid">36</div>
+        <div id="right-player-bid" class="player-bid">37</div>
+        <div id="bottom-player-bid" class="player-bid">38</div>
+        <div id="left-player-bid" class="player-bid">39</div>
+      </div>
+      <div id="played-bones" style="display:none;">
+        <img id="top-played-bone" class="played-bone" src="static/bones/w66.png"/>
+        <img id="right-played-bone" class="played-bone" src="static/bones/n64.png"/>
+        <img id="bottom-played-bone" class="played-bone" src="static/bones/e66.png"/>
+        <img id="left-played-bone" class="played-bone" src="static/bones/s64.png"/>
+      </div>
+    </div>
+    <div id="round-info" class="round-info">
+      <p id="round-info-bid-value">39</p>
+    </div>
+    <div id="top-avatar" class="avatar avatar-top">
+      <img src="http://www.gravatar.com/avatar/79189f8df5ba53dbe471858c7df3d6eb?d=identicon&s=34"/>
+      <div>
+        <p class="avatar-name">
+          <span id="top-avatar-name">Jordan</span> <span id="top-avatar-rank" class="avatar-rank">1</span>
+        </p>
+        <p id="top-avatar-team" class="avatar-team">Team Awesome</p>
+      </div>
+    </div>
+    <div id="right-avatar" class="avatar avatar-right">
+      <img src="http://www.gravatar.com/avatar/68bc2562553ce1444e170534654a396c?d=identicon&s=34"/>
+      <div>
+        <p class="avatar-name">
+          <span id="right-avatar-name">Shola</span> <span id="right-avatar-rank" class="avatar-rank">9</span>
+        </p>
+        <p id="right-avatar-team" class="avatar-team">Team Not</p>
+      </div>
+    </div>
+    <div id="bottom-avatar" class="avatar avatar-bottom">
+      <img src="http://www.gravatar.com/avatar/5569083e7fa3c26718e49372b7221487?d=identicon&s=34"/>
+      <div>
+        <p class="avatar-name">
+          <span id="bottom-avatar-rank" class="avatar-rank">2</span> <span id="bottom-avatar-name">Casey</span>
+        </p>
+        <p id="bottom-avatar-team" class="avatar-team">Team Awesome</p>
+      </div>
+    </div>
+    <div id="left-avatar" class="avatar avatar-left">
+      <img src="http://www.gravatar.com/avatar/726af9bbbe4ce10969bd1a327b4cd3ba?d=identicon&s=34"/>
+      <div>
+        <p class="avatar-name">
+          <span id="left-avatar-name">Terry</span> <span id="left-avatar-rank" class="avatar-rank">12</span>
+        </p>
+        <p id="left-avatar-team" class="avatar-team">Team Not</p>
+      </div>
+    </div>
+    <div id="top-hand" class="hand hand-top">
+      <img id="top-held-bone-1" class="held-bone" src="static/bones/wnn.png"/>
+      <img id="top-held-bone-2" class="held-bone" src="static/bones/wnn.png"/>
+      <img id="top-held-bone-3" class="held-bone" src="static/bones/wnn.png"/>
+      <img id="top-held-bone-4" class="held-bone" src="static/bones/wnn.png"/>
+      <img id="top-held-bone-5" class="held-bone" src="static/bones/wnn.png"/>
+      <img id="top-held-bone-6" class="held-bone" src="static/bones/wnn.png"/>
+      <img id="top-held-bone-7" class="held-bone" src="static/bones/wnn.png"/>
+    </div>
+
+    <div id="right-hand" class="hand hand-right">
+      <img id="right-held-bone-1" class="held-bone" src="static/bones/nnn.png"/>
+      <img id="right-held-bone-2" class="held-bone" src="static/bones/nnn.png"/>
+      <img id="right-held-bone-3" class="held-bone" src="static/bones/nnn.png"/>
+      <img id="right-held-bone-4" class="held-bone" src="static/bones/nnn.png"/>
+      <img id="right-held-bone-5" class="held-bone" src="static/bones/nnn.png"/>
+      <img id="right-held-bone-6" class="held-bone" src="static/bones/nnn.png"/>
+      <img id="right-held-bone-7" class="held-bone" src="static/bones/nnn.png"/>
+    </div>
+
+    <div id="bottom-hand" class="hand hand-bottom">
+      <img id="bottom-held-bone-1" class="held-bone" src="static/bones/e32.png"/>
+      <img id="bottom-held-bone-2" class="held-bone" src="static/bones/e43.png"/>
+      <img id="bottom-held-bone-3" class="held-bone" src="static/bones/e33.png"/>
+      <img id="bottom-held-bone-4" class="held-bone" src="static/bones/e63.png"/>
+      <img id="bottom-held-bone-5" class="held-bone" src="static/bones/e55.png"/>
+      <img id="bottom-held-bone-6" class="held-bone" src="static/bones/e51.png"/>
+      <img id="bottom-held-bone-7" class="held-bone" src="static/bones/e41.png"/>
+    </div>
+
+    <div id="left-hand" class="hand hand-left">
+      <img id="left-held-bone-1" class="held-bone" src="static/bones/snn.png"/>
+      <img id="left-held-bone-2" class="held-bone" src="static/bones/snn.png"/>
+      <img id="left-held-bone-3" class="held-bone" src="static/bones/snn.png"/>
+      <img id="left-held-bone-4" class="held-bone" src="static/bones/snn.png"/>
+      <img id="left-held-bone-5" class="held-bone" src="static/bones/snn.png"/>
+      <img id="left-held-bone-6" class="held-bone" src="static/bones/snn.png"/>
+      <img id="left-held-bone-7" class="held-bone" src="static/bones/snn.png"/>
+    </div>
+
+  </div>
+
+  <div id="chat-block" class="chat-block">
+    <div id="chat-messages" class="chat-messages"></div>
+    <div id="chat-input" class="chat-input">
+
+    </div>
+  </div>
+
+  <div id="info-block" class="info-block">
+    <div id="info-content" class="info-content"></div>
+    <div id="info-
+    
+    
+
+</body>

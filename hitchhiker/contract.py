@@ -8,7 +8,6 @@ class Bid( object ):
         self.bid = bid
         self.contract = contract
         self.player = player
-        self.zerosum = ( bid >= 42 )
 
 class Contract( object ):
     """A contract."""
