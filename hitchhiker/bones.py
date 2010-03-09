@@ -29,10 +29,16 @@ class Bone( object ):
     def construct( cls, t, b ):
         """Constructs a version of this class for the specified bone."""
 
+        # re-worked to remove "jump" in ranks
+        # i.e. rank(6,6)=7, (6,5)=5, (6,4)=4, (6,3)=3, (6,2)=2, (6,1)=1, (6,0)=0
+        # should be...
+        # rank(6,6)=6, (6,5)=5, (6,4)=4, (6,3)=3, (6,2)=2, (6,1)=1, (6,0)=0
+        # rank(3,3)=6, (3,6)=5, (3,5)=4, (3,4)=3, (3,2)=2, (3,1)=1, (3,0)=0
+
         return type( '%s%s' % ( cls.terms[ t ], cls.terms[ b ] ), ( cls, ), {
             'double': ( t == b ),
             'identity': ( t, b ),
-            'rank': ( { t: 7 } if t == b else { t: b, b: t } ),
+            'rank': ( { t: 6 } if t == b else { {t: b} if t > b else {t:b-1}, {b: t} if b > t else {b:t-1} } ),
             'value': ( t + b if ( t + b ) % 5 == 0 else 0 ),
         } )
 
