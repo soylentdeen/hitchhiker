@@ -1,6 +1,4 @@
-from hitchiker.gameplay import Player
-
-def controlProbability(hand, suit):
+def controlProbability(hand, trump):
     """Returns the probability that the given hand controls the given trump suit"""
     '''
         inputs:
@@ -17,14 +15,7 @@ def controlProbability(hand, suit):
 
    # How many dominos of the suit does the hand contain?
 
-   ntrumps = 0
-   trumps = []
-
-   for bone in hand:
-       if ((bone.t == suit) or (bone.b == suit)):
-           ntrumps += 1
-           trumps.append(bone)
-
+   for b in hand
 
    # How many winning leads does the hand contain?
 
@@ -37,7 +28,10 @@ def controlProbability(hand, suit):
        else:
            suit_rank.append(b.t)
 
-   rank = suit_rank.argsort()
+   suit_rank.sort(reverse=True)
+   :
+   for b in suit_rank:
+       b
 
    # How many dominoes must a potential "spoiler" have to protect his/her high domino?
 

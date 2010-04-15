@@ -2,6 +2,7 @@
 from hitchhiker.bones import RandomDeck, Suits
 from hitchhiker.contract import Bid, TrumpContract
 from hitchhiker.util import reorder, shuffle
+from hitchhiker.evaluate import controlProbability
 
 class Player( object ):
     """A player in a particular game."""
@@ -9,10 +10,10 @@ class Player( object ):
     def __init__( self, team, name, controller ):
         """Constructor."""
 
-        self.controller = controller
-        self.hand = None
-        self.name = name
-        self.team = team
+        self.controller = controller    #
+        self.hand = None                #
+        self.name = name                #  Name of player
+        self.team = team                #
 
     def __repr__( self ):
         return 'Player(%s)' % self.name
@@ -25,7 +26,8 @@ class Player( object ):
 
         print
         print '%s has: %s' % ( self.name, self.hand.dump() )
-        bid = raw_input( 'Bid (enter to pass): ' )
+        #bid = raw_input( 'Bid (enter to pass): ' )
+        print 'Probability you control 6\'s : %f' % controlProbablity(self.hand, 6)
         if bid:
             trump = raw_input( 'Trump: ' )
             return Bid( self, TrumpContract( Suits[ trump ] ), int( bid ) )
@@ -87,6 +89,7 @@ class Hand( object ):
         return 'Hand( %s %s )' % ( self.player, bones )
 
     def dump( self ):
+        """ Prints a String representation for the bones left in the hand. """
         return ' '.join([ repr( bone ) for bone in self.hand.itervalues() ])
 
     def play( self, identity ):
@@ -153,10 +156,10 @@ class Trick( object ):
 
         # determine the effects of the play
         self.value += bone.value
-        if self.winning_play:
+        if self.winning_play:                # If this NOT is the first bone in the trick, figure out if it is a winner
             self.round.bid.contract.adjudicate( self, player, play )
             print 'bone is a %s' % play.role
-        else:
+        else:                                # else, THIS is the winning play, by default
             play.role = 'suit'
             self.suit, self.winning_play, self.winning_player = play.suit, play, player
             print 'trick suit is %s' % self.suit.identity
