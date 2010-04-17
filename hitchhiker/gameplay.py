@@ -26,8 +26,8 @@ class Player( object ):
 
         print
         print '%s has: %s' % ( self.name, self.hand.dump() )
-        #bid = raw_input( 'Bid (enter to pass): ' )
-        print 'Probability you control 6\'s : %f' % controlProbablity(self.hand, 6)
+        bid = raw_input( 'Bid (enter to pass): ' )
+        print 'Probability you control 6\'s : %f' % controlProbability(self.hand, Suits['sixes'])
         if bid:
             trump = raw_input( 'Trump: ' )
             return Bid( self, TrumpContract( Suits[ trump ] ), int( bid ) )
@@ -159,7 +159,7 @@ class Trick( object ):
         if self.winning_play:                # If this NOT is the first bone in the trick, figure out if it is a winner
             self.round.bid.contract.adjudicate( self, player, play )
             print 'bone is a %s' % play.role
-        else:                                # else, THIS is the winning play, by default
+        else:                                # else, THIS is the winning play, by default, as it is the first bone in the trick
             play.role = 'suit'
             self.suit, self.winning_play, self.winning_player = play.suit, play, player
             print 'trick suit is %s' % self.suit.identity

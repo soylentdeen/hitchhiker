@@ -35,10 +35,16 @@ class Bone( object ):
         # rank(6,6)=6, (6,5)=5, (6,4)=4, (6,3)=3, (6,2)=2, (6,1)=1, (6,0)=0
         # rank(3,3)=6, (3,6)=5, (3,5)=4, (3,4)=3, (3,2)=2, (3,1)=1, (3,0)=0
 
+        if t == b:
+            rnk = {t:6}
+        elif t > b:
+            rnk = {t: b, b: t-1}
+        else:
+            rnk = {t: b-1, b: t}
         return type( '%s%s' % ( cls.terms[ t ], cls.terms[ b ] ), ( cls, ), {
             'double': ( t == b ),
             'identity': ( t, b ),
-            'rank': ( { t: 6 } if t == b else { {t: b} if t > b else {t:b-1}, {b: t} if b > t else {b:t-1} } ),
+            'rank': ( rnk ),
             'value': ( t + b if ( t + b ) % 5 == 0 else 0 ),
         } )
 
