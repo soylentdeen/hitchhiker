@@ -97,6 +97,7 @@ def controlProbability(hand, trump):
     # have covered dominoes.
 
     # This needs to be improved... [double, blank] still gives non-zero probability 
+    # Sometimes gives Prob > 1
     min_cover = max((n_missing_trumps / 3)-1, 0)
 
     # Probability of each "Off" in missing_rank being "safe" for bidder
@@ -109,13 +110,18 @@ def controlProbability(hand, trump):
         # Add new probability
         Probability.append(0.0)
         
+        winning_trumps = [b for b in hand_rank if b > crit_rank]
+
         # Calculate how many 'cover' dominos the posessor of the critical
         # domino needs in order to retain the critical domino until
         # it is the high trump
-        necessary_cover = 6 - crit_rank
+        #necessary_cover = 6 - crit_rank
+        necessary_cover = len(winning_trumps)
         
         #print "Critical Ranking :"+str(crit_rank)
         #print "Necessary Cover :"+str(necessary_cover)
+
+        # probably need to do multiple hands... if 6-5 is bare, that means 6-4 will be doubled up
         
         for trmp in range(min_cover, necessary_cover):
             #print trmp
@@ -131,6 +137,7 @@ def controlProbability(hand, trump):
             #print prob.eval()
             Probability[-1] += prob.eval()
             #raw_input()
+        print crit_rank, winning_trumps, necessary_cover, min_cover, Probability[-1]
 
     prob = 1.0 if Probability else 0.0
     for p in Probability:
