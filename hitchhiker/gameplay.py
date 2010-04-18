@@ -26,8 +26,14 @@ class Player( object ):
 
         print
         print '%s has: %s' % ( self.name, self.hand.dump() )
-        bid = raw_input( 'Bid (enter to pass): ' )
+        print 'Probability you control 0\'s : %f' % controlProbability(self.hand, Suits['blanks'])
+        print 'Probability you control 1\'s : %f' % controlProbability(self.hand, Suits['ones'])
+        print 'Probability you control 2\'s : %f' % controlProbability(self.hand, Suits['twos'])
+        print 'Probability you control 3\'s : %f' % controlProbability(self.hand, Suits['threes'])
+        print 'Probability you control 4\'s : %f' % controlProbability(self.hand, Suits['fours'])
+        print 'Probability you control 5\'s : %f' % controlProbability(self.hand, Suits['fives'])
         print 'Probability you control 6\'s : %f' % controlProbability(self.hand, Suits['sixes'])
+        bid = raw_input( 'Bid (enter to pass): ' )
         if bid:
             trump = raw_input( 'Trump: ' )
             return Bid( self, TrumpContract( Suits[ trump ] ), int( bid ) )
