@@ -137,7 +137,7 @@ def controlProbability(hand, trump):
             #print prob.eval()
             Probability[-1] += prob.eval()
             #raw_input()
-        print crit_rank, winning_trumps, necessary_cover, min_cover, Probability[-1]
+        #print crit_rank, winning_trumps, necessary_cover, min_cover, Probability[-1]
 
     prob = 1.0 if Probability else 0.0
     for p in Probability:
