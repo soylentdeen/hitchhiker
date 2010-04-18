@@ -33,6 +33,7 @@ class Player( object ):
         print 'Probability you control 4\'s : %f' % controlProbability(self.hand, Suits['fours'])
         print 'Probability you control 5\'s : %f' % controlProbability(self.hand, Suits['fives'])
         print 'Probability you control 6\'s : %f' % controlProbability(self.hand, Suits['sixes'])
+        #print 'Probability you control Doubles : %f' % controlProbability(self.hand, Suits['doubles'])
         bid = raw_input( 'Bid (enter to pass): ' )
         if bid:
             trump = raw_input( 'Trump: ' )

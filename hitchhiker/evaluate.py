@@ -83,50 +83,60 @@ def controlProbability(hand, trump):
     # Assuming the "critical" domino is in an opposing hand, what is
     # number of possible hands from the remaining 20 dominos?
     total_hands = Combination(20, 6)
-            
+    
+    # Finds the ranks of the missing trumps NOT in the player's hand
     missing_rank = [b for b in all_rank if not b in hand_rank]
-
-    #print missing_rank
     n_missing_trumps = len(missing_rank)
+
+    # Based on number of trumps still out, figure out the
+    # minimum cover, assuming even distribution
+    # i.e.  if player only has double (6-6), there are 6 dominos
+    # still out.  Even distribution -> 2 trumps in each hand
+    # 6-5 will be covered by at least 1.  Unrealistic to look at case
+    # with no cover for 6-5, as if 6-5 is uncovered, another hand will
+    # have covered dominoes.
+
+    # This needs to be improved... [double, blank] still gives non-zero probability 
+    min_cover = max((n_missing_trumps / 3)-1, 0)
+
+    # Probability of each "Off" in missing_rank being "safe" for bidder
     Probability = []
-    if ( n_missing_trumps > 0):
-        for crit_rank in missing_rank:
-            # Crit_rank is the rank of the "critical" domino
-            # which can wrest control if it not drawn out with
-            # higher dominoes from the player's hand.
-            
-            # Add new probability
-            Probability.append(0.0)
+    for crit_rank in missing_rank:
+        # Crit_rank is the rank of the "critical" domino
+        # which can wrest control if it not drawn out with
+        # higher dominoes from the player's hand.
+        
+        # Add new probability
+        Probability.append(0.0)
+        
+        # Calculate how many 'cover' dominos the posessor of the critical
+        # domino needs in order to retain the critical domino until
+        # it is the high trump
+        necessary_cover = 6 - crit_rank
+        
+        #print "Critical Ranking :"+str(crit_rank)
+        #print "Necessary Cover :"+str(necessary_cover)
+        
+        for trmp in range(min_cover, necessary_cover):
+            #print trmp
+            offs_prob = Combination(20-n_missing_trumps, 6-trmp)
+            #print offs_prob.frac.num
+            #print offs_prob.frac.denom
+            trmp_prob = Combination(n_missing_trumps, trmp)
+            #print trmp_prob.frac.num
+            #print trmp_prob.frac.denom
+            prob = offs_prob.frac
+            prob * trmp_prob.frac
+            prob / total_hands.frac
+            #print prob.eval()
+            Probability[-1] += prob.eval()
+            #raw_input()
 
-            # Calculate how many 'cover' dominos the posessor of the critical
-            # domino needs in order to retain the critical domino until
-            # it is the high trump
-            necessary_cover = 6 - crit_rank
-            #print "Critical Ranking :"+str(crit_rank)
-            #print "Necessary Cover :"+str(necessary_cover)
-            
-            for trmp in range(necessary_cover):
-                #print trmp
-                offs_prob = Combination(20-n_missing_trumps, 6-trmp)
-                #print offs_prob.frac.num
-                #print offs_prob.frac.denom
-                trmp_prob = Combination(n_missing_trumps, trmp)
-                #print trmp_prob.frac.num
-                #print trmp_prob.frac.denom
-                prob = offs_prob.frac
-                prob * trmp_prob.frac
-                prob / total_hands.frac
-                #print prob.eval()
-                Probability[-1] += prob.eval()
-                #raw_input()
-            #else:
-            #    if (necessary_cover == 0):
-            #        print "Missing the double! Cannot Possibly hope to control this suit!"
+    prob = 1.0 if Probability else 0.0
+    for p in Probability:
+        prob *= p
 
-    p = 1.0
-    for prob in Probability:
-        p *= prob
-    return p
+    return prob
 
     # How many winning leads does the hand contain?
 
