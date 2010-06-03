@@ -88,6 +88,8 @@ def controlProbability(hand, trump):
     missing_rank = [b for b in all_rank if not b in hand_rank]
     n_missing_trumps = len(missing_rank)
 
+    n_leads = 6 - max(missing_rank)
+
     # Based on number of trumps still out, figure out the
     # minimum cover, assuming even distribution
     # i.e.  if player only has double (6-6), there are 6 dominos
@@ -110,6 +112,14 @@ def controlProbability(hand, trump):
         # Add new probability
         Probability.append(0.0)
         
+        # How many combinations end with the critical domino getting saved?
+
+        # Of the combinations which don't end with loss of control, which is the next highest domino?
+
+        # For this domino, given the critical domino didn't get saved, how many combos
+        # end with the next-highest domino being saved...
+
+
         winning_trumps = [b for b in hand_rank if b > crit_rank]
 
         # Calculate how many 'cover' dominos the posessor of the critical
