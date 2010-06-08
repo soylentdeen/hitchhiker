@@ -46,6 +46,57 @@ class Fraction( object ):
         return self.value
 
 
+def distribute(bones, h1, h2, h3, nleads, trumps):
+    if (len(bones) > 0):
+        ngood = 0
+        ntot = 0
+        a = h1[:]
+        b = bones[:]
+        bone = b.pop()
+        a.append(bone)
+        #print 'Hand 1 : ', a
+        c, d = distribute(b, a, h2, h3, nleads, trumps)
+        ngood += c
+        ntot += d
+        a = h2[:]
+        a.append(bone)
+        #print 'hand 1 : ', h1
+        #print 'Hand 2 : ', a
+        c, d = distribute(b, h1, a, h3, nleads, trumps)
+        ngood += c
+        ntot += d
+        a = h3[:]
+        a.append(bone)
+        c, d = distribute(b, h1, h2, a, nleads, trumps)
+        ngood += c
+        ntot += d
+        return ngood, ntot
+    else:
+        #print h1, h2, h3
+        if (nleads < len(h1)):
+            if ( ( len(trumps) > nleads) ):
+                if ( max(h1) > trumps[nleads]):
+                    #print 'set by h1!'
+                    return 0, 1
+            else:
+                return 0, 1
+        if (nleads < len(h2)):
+            if ( len(trumps) > nleads):
+                if (max(h2) > trumps[nleads]):
+                    #print 'set by h2!'
+                    return 0, 1
+            else:
+                return 0, 1
+        if (nleads < len(h3)):
+            if (len(trumps) > nleads):
+                if (max(h3) > trumps[nleads]):
+                    #print 'set by h3!'
+                    return 0, 1
+            else:
+                return 0, 1
+        #print h1, h2, h3, trumps
+        return 1, 1
+
 def controlProbability(hand, trump):
     """Returns the probability that the given hand controls the given trump suit"""
     '''
@@ -71,7 +122,8 @@ def controlProbability(hand, trump):
         if trump.includes(b):
             hand_rank.append(b.rank[trump.value])
 
-    print hand_rank
+    hand_rank.sort()
+    hand_rank.reverse()
     #How many trumps do we have?
     n_trumps = len(hand_rank)
 
@@ -82,7 +134,7 @@ def controlProbability(hand, trump):
 
     # Assuming the "critical" domino is in an opposing hand, what is
     # number of possible hands from the remaining 20 dominos?
-    total_hands = Combination(20, 6)
+    #total_hands = Combination(20, 6)
     
     # Finds the ranks of the missing trumps NOT in the player's hand
     missing_rank = [b for b in all_rank if not b in hand_rank]
@@ -94,6 +146,13 @@ def controlProbability(hand, trump):
     h2 = []
     h3 = []
 
+    success, total =  distribute(missing_rank, h1, h2, h3, n_leads, hand_rank)
+
+    prob = float(success)/float(total)
+
+    return prob
+
+    '''
     # Based on number of trumps still out, figure out the
     # minimum cover, assuming even distribution
     # i.e.  if player only has double (6-6), there are 6 dominos
@@ -157,7 +216,7 @@ def controlProbability(hand, trump):
     for p in Probability:
         prob *= p
 
-    return prob
+    '''
 
     # How many winning leads does the hand contain?
 
