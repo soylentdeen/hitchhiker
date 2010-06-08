@@ -90,6 +90,10 @@ def controlProbability(hand, trump):
 
     n_leads = 6 - max(missing_rank)
 
+    h1 = []
+    h2 = []
+    h3 = []
+
     # Based on number of trumps still out, figure out the
     # minimum cover, assuming even distribution
     # i.e.  if player only has double (6-6), there are 6 dominos
