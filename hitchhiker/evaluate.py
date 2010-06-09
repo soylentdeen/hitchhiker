@@ -47,6 +47,7 @@ class Fraction( object ):
 
 
 def distribute(bones, h1, h2, h3, nleads, trumps):
+    """ Calculates all possible hands with the remaining trumps, figuring out which hands can wrest control from the bidder's hand. """
     if (len(bones) > 0):
         ngood = 0
         ntot = 0
@@ -152,80 +153,9 @@ def controlProbability(hand, trump):
 
     return prob
 
-    '''
-    # Based on number of trumps still out, figure out the
-    # minimum cover, assuming even distribution
-    # i.e.  if player only has double (6-6), there are 6 dominos
-    # still out.  Even distribution -> 2 trumps in each hand
-    # 6-5 will be covered by at least 1.  Unrealistic to look at case
-    # with no cover for 6-5, as if 6-5 is uncovered, another hand will
-    # have covered dominoes.
+def calculateMostTrumpsProbabiliity(hand, suit):
+    """ Returns the probability of having the most trumps (irrespective of control). Good thing to know if you're leading low..."""
 
-    # This needs to be improved... [double, blank] still gives non-zero probability 
-    # Sometimes gives Prob > 1
-    min_cover = max((n_missing_trumps / 3)-1, 0)
-
-    # Probability of each "Off" in missing_rank being "safe" for bidder
-    Probability = []
-    for crit_rank in missing_rank:
-        # Crit_rank is the rank of the "critical" domino
-        # which can wrest control if it not drawn out with
-        # higher dominoes from the player's hand.
-        
-        # Add new probability
-        Probability.append(0.0)
-        
-        # How many combinations end with the critical domino getting saved?
-
-        # Of the combinations which don't end with loss of control, which is the next highest domino?
-
-        # For this domino, given the critical domino didn't get saved, how many combos
-        # end with the next-highest domino being saved...
-
-
-        winning_trumps = [b for b in hand_rank if b > crit_rank]
-
-        # Calculate how many 'cover' dominos the posessor of the critical
-        # domino needs in order to retain the critical domino until
-        # it is the high trump
-        #necessary_cover = 6 - crit_rank
-        necessary_cover = len(winning_trumps)
-        
-        #print "Critical Ranking :"+str(crit_rank)
-        #print "Necessary Cover :"+str(necessary_cover)
-
-        # probably need to do multiple hands... if 6-5 is bare, that means 6-4 will be doubled up
-        
-        for trmp in range(min_cover, necessary_cover):
-            #print trmp
-            offs_prob = Combination(20-n_missing_trumps, 6-trmp)
-            #print offs_prob.frac.num
-            #print offs_prob.frac.denom
-            trmp_prob = Combination(n_missing_trumps, trmp)
-            #print trmp_prob.frac.num
-            #print trmp_prob.frac.denom
-            prob = offs_prob.frac
-            prob * trmp_prob.frac
-            prob / total_hands.frac
-            #print prob.eval()
-            Probability[-1] += prob.eval()
-            #raw_input()
-        #print crit_rank, winning_trumps, necessary_cover, min_cover, Probability[-1]
-
-    prob = 1.0 if Probability else 0.0
-    for p in Probability:
-        prob *= p
-
-    '''
-
-    # How many winning leads does the hand contain?
-
-    # How many dominoes must a potential "spoiler" have to protect his/her high domino?
-
-    # What is the probability for each potential "spoiler"?
-
-    # What is the aggregate probability?
-    
 def calculateLeadProbability(hand, suit):
     """Returns a list corresponding to the probabilities that each domino in HAND will be able to used as a winning lead, assuming SUIT is trump"""
 
