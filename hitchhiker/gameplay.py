@@ -26,13 +26,21 @@ class Player( object ):
 
         print
         print '%s has: %s' % ( self.name, self.hand.dump() )
-        print 'Probability you control 0\'s : %f' % controlProbability(self.hand, Suits['blanks'])
-        print 'Probability you control 1\'s : %f' % controlProbability(self.hand, Suits['ones'])
-        print 'Probability you control 2\'s : %f' % controlProbability(self.hand, Suits['twos'])
-        print 'Probability you control 3\'s : %f' % controlProbability(self.hand, Suits['threes'])
-        print 'Probability you control 4\'s : %f' % controlProbability(self.hand, Suits['fours'])
-        print 'Probability you control 5\'s : %f' % controlProbability(self.hand, Suits['fives'])
-        print 'Probability you control 6\'s : %f' % controlProbability(self.hand, Suits['sixes'])
+        print '                             : CONTROL : MAJORITY'
+        blanks = controlProbability(self.hand, Suits['blanks'])
+        print 'Probability you control 0\'s : %f, %f' % (blanks[0], blanks[1])
+        ones = controlProbability(self.hand, Suits['ones'])
+        print 'Probability you control 1\'s : %f, %f' % (ones[0], ones[1])
+        twos = controlProbability(self.hand, Suits['twos'])
+        print 'Probability you control 2\'s : %f, %f' % (twos[0], twos[1])
+        threes = controlProbability(self.hand, Suits['threes'])
+        print 'Probability you control 3\'s : %f, %f' % (threes[0], threes[1])
+        fours = controlProbability(self.hand, Suits['fours'])
+        print 'Probability you control 4\'s : %f, %f' % (fours[0], fours[1])
+        fives = controlProbability(self.hand, Suits['fives'])
+        print 'Probability you control 5\'s : %f, %f' % (fives[0], fives[1])
+        sixes = controlProbability(self.hand, Suits['sixes'])
+        print 'Probability you control 6\'s : %f, %f' % (sixes[0], sixes[1])
         #print 'Probability you control Doubles : %f' % controlProbability(self.hand, Suits['doubles'])
         bid = raw_input( 'Bid (enter to pass): ' )
         if bid:

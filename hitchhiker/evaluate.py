@@ -48,55 +48,65 @@ class Fraction( object ):
 
 def distribute(bones, h1, h2, h3, nleads, trumps):
     """ Calculates all possible hands with the remaining trumps, figuring out which hands can wrest control from the bidder's hand. """
+
+    # case A: studied hand CONTROLS the trumps
+    # case B: studied hand has MORE trumps than any other player
+    # total : counter for total number of possible hands
     if (len(bones) > 0):
-        ngood = 0
-        ntot = 0
-        a = h1[:]
-        b = bones[:]
-        bone = b.pop()
-        a.append(bone)
-        #print 'Hand 1 : ', a
-        c, d = distribute(b, a, h2, h3, nleads, trumps)
-        ngood += c
-        ntot += d
-        a = h2[:]
-        a.append(bone)
-        #print 'hand 1 : ', h1
-        #print 'Hand 2 : ', a
-        c, d = distribute(b, h1, a, h3, nleads, trumps)
-        ngood += c
-        ntot += d
-        a = h3[:]
-        a.append(bone)
-        c, d = distribute(b, h1, h2, a, nleads, trumps)
-        ngood += c
-        ntot += d
-        return ngood, ntot
+        control = 0
+        more = 0
+        total = 0
+        hand = h1[:]
+        dominoes = bones[:]
+        bone = dominoes.pop()
+        hand.append(bone)
+        result = distribute(dominoes, hand, h2, h3, nleads, trumps)
+        control += result[0]
+        more += result[1]
+        total += result[-1]
+        hand = h2[:]
+        hand.append(bone)
+        result = distribute(dominoes, h1, hand, h3, nleads, trumps)
+        control += result[0]
+        more += result[1]
+        total += result[-1]
+        hand = h3[:]
+        hand.append(bone)
+        result = distribute(dominoes, h1, h2, hand, nleads, trumps)
+        control += result[0]
+        more += result[1]
+        total += result[-1]
+        return [control, more, total]
     else:
         #print h1, h2, h3
+        A = 1
+        B = 1
+        T = 1
+        ntrumps = len(trumps)
         if (nleads < len(h1)):
-            if ( ( len(trumps) > nleads) ):
+            if ( ( ntrumps > nleads) ):
                 if ( max(h1) > trumps[nleads]):
-                    #print 'set by h1!'
-                    return 0, 1
+                    A = 0
             else:
-                return 0, 1
+                A = 0
+                B = 0
         if (nleads < len(h2)):
-            if ( len(trumps) > nleads):
+            if ( ntrumps > nleads):
                 if (max(h2) > trumps[nleads]):
-                    #print 'set by h2!'
-                    return 0, 1
+                    A = 0
             else:
-                return 0, 1
+                A = 0
+                B = 0
         if (nleads < len(h3)):
-            if (len(trumps) > nleads):
+            if (ntrumps > nleads):
                 if (max(h3) > trumps[nleads]):
-                    #print 'set by h3!'
-                    return 0, 1
+                    A = 0
             else:
-                return 0, 1
-        #print h1, h2, h3, trumps
-        return 1, 1
+                A = 0
+                B = 0
+        if ((ntrumps<=len(h1))or(ntrumps<=len(h2))or(ntrumps<=len(h3))):
+            B = 0
+        return [A, B, T]
 
 def controlProbability(hand, trump):
     """Returns the probability that the given hand controls the given trump suit"""
@@ -110,9 +120,14 @@ def controlProbability(hand, trump):
             bone.b - integer representing the bottom suit
 
         returns:
-            normalized probability that the given hand controls (i.e. 
-            will be able to draw remaining trumps with at least one
-            trump left in the player's hand) the given suit.
+            a list of normalized probabilities that the given hand
+            0) controls (i.e. will be able to draw remaining trumps
+               with at least one trump left in the player's hand)
+               the given suit. Denoted P_control
+            1) or has the most of any player at the table of
+               the given suit. Denoted P_majority
+
+            return syntax [P_control, P_majority]
     '''
 
     # How many dominos of the suit does the hand contain?
@@ -147,11 +162,12 @@ def controlProbability(hand, trump):
     h2 = []
     h3 = []
 
-    success, total =  distribute(missing_rank, h1, h2, h3, n_leads, hand_rank)
+    probability =  distribute(missing_rank, h1, h2, h3, n_leads, hand_rank)
 
-    prob = float(success)/float(total)
+    P_control = float(probability[0])/float(probability[-1])
+    P_majority = float(probability[1])/float(probability[-1])
 
-    return prob
+    return (P_control, P_majority)
 
 def calculateMostTrumpsProbabiliity(hand, suit):
     """ Returns the probability of having the most trumps (irrespective of control). Good thing to know if you're leading low..."""
