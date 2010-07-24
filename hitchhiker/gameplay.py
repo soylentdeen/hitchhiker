@@ -1,8 +1,9 @@
 
-from hitchhiker.bones import RandomDeck, Suits
+from hitchhiker.bones import RandomDeck, Suits, Bones
 from hitchhiker.contract import Bid, TrumpContract
 from hitchhiker.util import reorder, shuffle
-from hitchhiker.evaluate import controlProbability
+from hitchhiker.evaluate import *
+#from hitchhiker.evaluate import controlProbability, calculateOffs, calculateLeadingOffs, calcBid
 
 class Player( object ):
     """A player in a particular game."""
@@ -27,21 +28,42 @@ class Player( object ):
         print
         print '%s has: %s' % ( self.name, self.hand.dump() )
         print '                             : CONTROL : MAJORITY'
-        blanks = controlProbability(self.hand, Suits['blanks'])
-        print 'Probability you control 0\'s : %f, %f' % (blanks[0], blanks[1])
-        ones = controlProbability(self.hand, Suits['ones'])
+        evaluation = []
+        for s in [Suits['blanks'], Suits['ones'], Suits['twos'], Suits['threes'], Suits['fours'], Suits['fives'], Suits['sixes']]:
+            control = controlProbability(self.hand, s, s)
+            offs = calculateOffs(self.hand, s)
+            leadingOffs = calculateLeadingOffs(self.hand, s)
+            print 'Probability you control %s\'s : %f, %f' % (s.value, control[0], control[1])
+            print 'Offs if %s\'s are trumps : ' % (s.value), offs
+            print 'Leading offs if %s\'s are trumps : ' % (s.value), leadingOffs
+            evaluation.append([s.value, control[0], control[1], offs, leadingOffs])
+
+            print '5:5 vulnarability : ', calcVulnerability(offs, leadingOffs, s, Bones[(5, 5)]())
+        #bid = []
+        #for e in evaluation:
+        #    bid.append(e[0], calcBid(e))
+        '''
+        ones = controlProbability(self.hand, Suits['ones'], Suits['ones'])
         print 'Probability you control 1\'s : %f, %f' % (ones[0], ones[1])
-        twos = controlProbability(self.hand, Suits['twos'])
+        print 'Offs if ones are trumps :', calculateOffs(self.hand, Suits['ones'])
+        print 'Leading offs if ones are trumps :', calculateLeadingOffs(self.hand, Suits['ones'])
+        twos = controlProbability(self.hand, Suits['twos'], Suits['twos'])
         print 'Probability you control 2\'s : %f, %f' % (twos[0], twos[1])
-        threes = controlProbability(self.hand, Suits['threes'])
+        print 'Offs if twos are trumps :', calculateOffs(self.hand, Suits['twos'])
+        print 'Leading offs if twos are trumps :', calculateLeadingOffs(self.hand, Suits['twos'])
+        threes = controlProbability(self.hand, Suits['threes'], Suits['threes'])
         print 'Probability you control 3\'s : %f, %f' % (threes[0], threes[1])
-        fours = controlProbability(self.hand, Suits['fours'])
+        print 'Offs if threes are trumps :', calculateOffs(self.hand, Suits['threes'])
+        fours = controlProbability(self.hand, Suits['fours'], Suits['fours'])
         print 'Probability you control 4\'s : %f, %f' % (fours[0], fours[1])
-        fives = controlProbability(self.hand, Suits['fives'])
+        print 'Offs if fours are trumps :', calculateOffs(self.hand, Suits['fours'])
+        fives = controlProbability(self.hand, Suits['fives'], Suits['fives'])
         print 'Probability you control 5\'s : %f, %f' % (fives[0], fives[1])
-        sixes = controlProbability(self.hand, Suits['sixes'])
+        print 'Offs if fives are trumps :', calculateOffs(self.hand, Suits['fives'])
+        sixes = controlProbability(self.hand, Suits['sixes'], Suits['sixes'])
         print 'Probability you control 6\'s : %f, %f' % (sixes[0], sixes[1])
-        #print 'Probability you control Doubles : %f' % controlProbability(self.hand, Suits['doubles'])
+        print 'Offs if sixes are trumps :', calculateOffs(self.hand, Suits['sixes'])
+        #print 'Probability you control Doubles : %f' % controlProbability(self.hand, Suits['doubles'])'''
         bid = raw_input( 'Bid (enter to pass): ' )
         if bid:
             trump = raw_input( 'Trump: ' )
