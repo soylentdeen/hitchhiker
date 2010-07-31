@@ -49,214 +49,219 @@ class Fraction( object ):
         return self.value
 
 
-def distribute(bones, h1, h2, h3, nleads, trumps):
-    """ Calculates all possible hands with the remaining trumps, figuring out which hands can wrest control from the bidder's hand. """
+class bidEvaluation( object ):
+    def __init__(self, hand, trump):
+        self.hand = hand
+        self.trump = trump
 
-    # case A: studied hand CONTROLS the trumps
-    # case B: studied hand has MORE trumps than any other player
-    # total : counter for total number of possible hands
-    if (len(bones) > 0):
-        control = 0
-        more = 0
-        total = 0
-        hand = h1[:]
-        dominoes = bones[:]
-        bone = dominoes.pop()
-        hand.append(bone)
-        result = distribute(dominoes, hand, h2, h3, nleads, trumps)
-        control += result[0]
-        more += result[1]
-        total += result[-1]
-        hand = h2[:]
-        hand.append(bone)
-        result = distribute(dominoes, h1, hand, h3, nleads, trumps)
-        control += result[0]
-        more += result[1]
-        total += result[-1]
-        hand = h3[:]
-        hand.append(bone)
-        result = distribute(dominoes, h1, h2, hand, nleads, trumps)
-        control += result[0]
-        more += result[1]
-        total += result[-1]
-        return [control, more, total]
-    else:
-        #print h1, h2, h3
-        A = 1
-        B = 1
-        T = 1
-        ntrumps = len(trumps)
-        if (nleads < len(h1)):
-            if ( ( ntrumps > nleads) ):
-                if ( max(h1) > trumps[nleads]):
-                    A = 0
-            else:
-                A = 0
-                B = 0
-        if (nleads < len(h2)):
-            if ( ntrumps > nleads):
-                if (max(h2) > trumps[nleads]):
-                    A = 0
-            else:
-                A = 0
-                B = 0
-        if (nleads < len(h3)):
-            if (ntrumps > nleads):
-                if (max(h3) > trumps[nleads]):
-                    A = 0
-            else:
-                A = 0
-                B = 0
-        if ((ntrumps<=len(h1))or(ntrumps<=len(h2))or(ntrumps<=len(h3))):
-            B = 0
-        return [A, B, T]
-
-def controlProbability(hand, suit, trump):
-    """Returns the probability that the given hand controls a suit given a trump suit"""
-    '''
-        inputs:
-        hand = list[] of bone objects
-        suit = the suit in question
-        trump = the trump to assume for this calculation
-
-        bone is a structure containing
-            bone.t - integer representing the top suit
-            bone.b - integer representing the bottom suit
-
-        returns:
-            a list of normalized probabilities that the given hand
-            0) controls (i.e. will be able to draw remaining trumps
-               with at least one trump left in the player's hand)
-               the given suit. Denoted P_control
-            1) or has the most of any player at the table of
-               the given suit. Denoted P_majority
-
-            return syntax [P_control, P_majority]
-    '''
-
-    # How many dominos of the suit does the hand contain?
-    hand_rank = []
-    # List containing ranks of the dominoes in the hand within the suit
-
-    if (suit.value == trump.value):
-        for b in hand.bones:
-            if trump.includes(b):
-                hand_rank.append(b.rank[trump.value])
-    else:
-        for b in hand.bones:
-            if (suit.includes(b) and not(trump.includes(b))):
-                hand_rank.append(b.rank[trump.value])
-
-    hand_rank.sort()
-    hand_rank.reverse()
-    #How many trumps do we have?
-    n_trumps = len(hand_rank)
-
-    #Which trumps are we missing
-    all_rank = [6, 5, 4, 3, 2, 1, 0]
-    if (suit.value != trump.value):
-        if suit.value > trump.value:
-            junk = all_rank.pop(suit.value-1)
+    def evaluate(self):
+        self.trumpControl = self.controlProbability(self.trump)
+        print self.trumpControl
+        self.offs = self.calculateOffs()
+        print self.offs
+        self.leadingOffs = self.calculateLeadingOffs()
+        print self.leadingOffs
+        
+    def distribute(self, bones, h1, h2, h3, nleads, trumps):
+        """ Calculates all possible hands with the remaining trumps, figuring out which hands can wrest control from the bidder's hand. """
+        # case A: studied hand CONTROLS the trumps
+        # case B: studied hand has MORE trumps than any other player
+        # total : counter for total number of possible hands
+        if (len(bones) > 0):
+            control = 0
+            more = 0
+            total = 0
+            hand = h1[:]
+            dominoes = bones[:]
+            bone = dominoes.pop()
+            hand.append(bone)
+            result = self.distribute(dominoes, hand, h2, h3, nleads, trumps)
+            control += result[0]
+            more += result[1]
+            total += result[-1]
+            hand = h2[:]
+            hand.append(bone)
+            result = self.distribute(dominoes, h1, hand, h3, nleads, trumps)
+            control += result[0]
+            more += result[1]
+            total += result[-1]
+            hand = h3[:]
+            hand.append(bone)
+            result = self.distribute(dominoes, h1, h2, hand, nleads, trumps)
+            control += result[0]
+            more += result[1]
+            total += result[-1]
+            return [control, more, total]
         else:
-            junk = all_rank.pop(suit.value)
+            #print h1, h2, h3
+            A = 1
+            B = 1
+            T = 1
+            ntrumps = len(trumps)
+            if (nleads < len(h1)):
+                if ( ( ntrumps > nleads) ):
+                    if ( max(h1) > trumps[nleads]):
+                        A = 0
+                    else:
+                        A = 0
+                        B = 0
+            if (nleads < len(h2)):
+                if ( ntrumps > nleads):
+                    if (max(h2) > trumps[nleads]):
+                        A = 0
+                else:
+                    A = 0
+                    B = 0
+            if (nleads < len(h3)):
+                if (ntrumps > nleads):
+                    if (max(h3) > trumps[nleads]):
+                        A = 0
+                else:
+                    A = 0
+                    B = 0
+            if ((ntrumps<=len(h1))or(ntrumps<=len(h2))or(ntrumps<=len(h3))):
+                B = 0
+            return [A, B, T]
 
-    # N.B. : This list represents the rank of the dominoes
-    # NOT the number of dots! i.e. 6 = double, 5 = next highest
-
-    # Assuming the "critical" domino is in an opposing hand, what is
-    # number of possible hands from the remaining 20 dominos?
-    #total_hands = Combination(20, 6)
+    def controlProbability(self, suit):
+        """Returns the probability that the given hand controls a suit given a trump suit"""
+        '''
+            inputs:
+            hand = list[] of bone objects
+            suit = the suit in question
+            trump = the trump to assume for this calculation
     
-    # Finds the ranks of the missing trumps NOT in the player's hand
-    missing_rank = [b for b in all_rank if not b in hand_rank]
-    n_missing_trumps = len(missing_rank)
+            bone is a structure containing
+                bone.t - integer representing the top suit
+                bone.b - integer representing the bottom suit
 
-    n_leads = 6 - max(missing_rank)
+            returns:
+                a list of normalized probabilities that the given hand
+                0) controls (i.e. will be able to draw remaining trumps
+                   with at least one trump left in the player's hand)
+                   the given suit. Denoted P_control
+                1) or has the most of any player at the table of
+                   the given suit. Denoted P_majority
 
-    h1 = []
-    h2 = []
-    h3 = []
+                return syntax [P_control, P_majority]
+        '''
 
-    probability =  distribute(missing_rank, h1, h2, h3, n_leads, hand_rank)
+        # How many dominos of the suit does the hand contain?
+        hand_rank = []
+        # List containing ranks of the dominoes in the hand within the suit
 
-    P_control = float(probability[0])/float(probability[-1])
-    P_majority = float(probability[1])/float(probability[-1])
+        if (suit.value == self.trump.value):
+            for b in self.hand.bones:
+                if self.trump.includes(b):
+                    hand_rank.append(b.rank[self.trump.value])
+        else:
+            for b in self.hand.bones:
+                if (suit.includes(b) and not(self.trump.includes(b))):
+                    hand_rank.append(b.rank[suit.value])
 
-    return (P_control, P_majority)
+        hand_rank.sort()
+        hand_rank.reverse()
+        #How many trumps do we have?
+        n_trumps = len(hand_rank)
 
-def calculateOffs(hand, trump):
-    """ Returns a dictionary list of the numbers of offs for the non-trump suits. """
-    '''
+        #Which trumps are we missing
+        all_rank = [6, 5, 4, 3, 2, 1, 0]
+        if (suit.value != self.trump.value):
+            if suit.value > self.trump.value:
+                junk = all_rank.pop(suit.value-1)
+            else:
+                junk = all_rank.pop(suit.value)
 
-    input:
-        hand : list of bones in the player's hand
-        trump : trump suit
+        # N.B. : This list represents the rank of the dominoes
+        # NOT the number of dots! i.e. 6 = double, 5 = next highest
 
-    output:
-        offs : { 0:#0, 1:#1, 2:#2, 3:#3, 4:#4, 5:#5, 6:#6 }
-                where #n = the number of offs in the suit of n
-                #trump == 0
-                how do we handle covered offs? (i.e. the 5:1 underneath the 5:5)
-    '''
-    offs = {}
-    for s in [Suits['blanks'], Suits['ones'], Suits['twos'], Suits['threes'], Suits['fours'], Suits['fives'], Suits['sixes']]:
-        off = 0
-        for b in hand.bones:
-            if (s.includes(b) and not(trump.includes(b))):
-                off += 1
-        if s.value == trump.value:
-            off = 0
-        offs[s.value] = off
-    return offs
+        # Assuming the "critical" domino is in an opposing hand, what is
+        # number of possible hands from the remaining 20 dominos?
+        #total_hands = Combination(20, 6)
+        
+        # Finds the ranks of the missing trumps NOT in the player's hand
+        missing_rank = [b for b in all_rank if not b in hand_rank]
+        n_missing_trumps = len(missing_rank)
 
-def calculateLeadingOffs(hand, trump):
-    """ Returns a list of the numbers of leading offs for the non-trump suits. """
-    '''
+        n_leads = 6 - max(missing_rank)
 
-    input:
-        hand : list of bones in the player's hand
-        trump : trump suit
+        h1 = []
+        h2 = []
+        h3 = []
 
-    output:
-        offs : { 0:#0, 1:#1, 2:#2, 3:#3, 4:#4, 5:#5, 6:#6 }
-                where #n = the number of leading offs in the suit of n
-                    A leading off is the suit an off will lead to if it
-                    is played first in a trick (i.e. 5:3 leads to the fives)
-                #trump == 0
-                how do we handle covered offs? (i.e. the 5:1 underneath the 5:5)
-    '''
-    offs = {}
-    for s in [Suits['blanks'],Suits['ones'],Suits['twos'],Suits['threes'],Suits['fours'],Suits['fives'],Suits['sixes']]:
-        off = 0
-        for b in hand.bones:
-            if (s.includes(b) and not(trump.includes(b))):
-                if (b.rank[s.value] < s.value):
-                    off += 1
-        if s.value == trump.value:
-            off = 0
-        offs[s.value] = off
-    return offs
+        probability =  self.distribute(missing_rank, h1, h2, h3, n_leads, hand_rank)
 
-def calcVulnerability(offs, leadingOffs, trump, bone):
-    totalWays = 0
-    leadingWays = 0
-    if not(trump.includes(bone)):
+        P_control = float(probability[0])/float(probability[-1])
+        P_majority = float(probability[1])/float(probability[-1])
+
+        return (P_control, P_majority)
+
+    def calculateOffs(self):
+        """ Returns a dictionary list of the numbers of offs for the non-trump suits. """
+        '''
+
+        input:
+            hand : list of bones in the player's hand
+            trump : trump suit
+
+        output:
+            offs : { 0:#0, 1:#1, 2:#2, 3:#3, 4:#4, 5:#5, 6:#6 }
+                    where #n = the number of offs in the suit of n
+                    #trump == 0
+                    how do we handle covered offs? (i.e. the 5:1 underneath the 5:5)
+        '''
+        offs = {}
         for s in [Suits['blanks'], Suits['ones'], Suits['twos'], Suits['threes'], Suits['fours'], Suits['fives'], Suits['sixes']]:
-            if (s.includes(bone)):
-                totalWays += offs[s.value]
-                leadingWays += leadingOffs[s.value]
+            off = 0
+            for b in self.hand.bones:
+                if (s.includes(b) and not(self.trump.includes(b))):
+                    off += 1
+            if s.value == self.trump.value:
+                off = 0
+            offs[s.value] = off
+        self.offs = offs
 
-    return [totalWays, leadingWays]
+    def calculateLeadingOffs(self):
+        """ Returns a list of the numbers of leading offs for the non-trump suits. """
+        '''
 
-def calcBid(evaluation):
-    suit = evaluation[0]
-    control_prob = evaluation[1]
-    majority_prob = evaluation[2]
+        input:
+            hand : list of bones in the player's hand
+            trump : trump suit
 
+        output:
+            offs : { 0:#0, 1:#1, 2:#2, 3:#3, 4:#4, 5:#5, 6:#6 }
+                    where #n = the number of leading offs in the suit of n
+                        A leading off is the suit an off will lead to if it
+                        is played first in a trick (i.e. 5:3 leads to the fives)
+                    #trump == 0
+                    how do we handle covered offs? (i.e. the 5:1 underneath the 5:5)
+        '''
+        offs = {}
+        for s in [Suits['blanks'],Suits['ones'],Suits['twos'],Suits['threes'],Suits['fours'],Suits['fives'],Suits['sixes']]:
+            off = 0
+            for b in self.hand.bones:
+                if (s.includes(b) and not(self.trump.includes(b))):
+                    if (b.rank[s.value] <= s.value):
+                        off += 1
+            if s.value == self.trump.value:
+                off = 0
+            offs[s.value] = off
+        self.leadingOffs = offs
 
+    def calcVulnerability(self, trump, bone):
+        totalWays = 0
+        leadingWays = 0
+        if not(trump.includes(bone)):
+            for s in [Suits['blanks'], Suits['ones'], Suits['twos'], Suits['threes'], Suits['fours'], Suits['fives'], Suits['sixes']]:
+                if (s.includes(bone)):
+                    totalWays += self.offs[s.value]
+                    leadingWays += self.leadingOffs[s.value]
 
-def calculateLeadProbability(hand, suit):
-    """Returns a list corresponding to the probabilities that each domino in HAND will be able to used as a winning lead, assuming SUIT is trump"""
+        return [totalWays, leadingWays]
 
-def calculateOffProbability(hand, suit):
-    """Returns a list corresponding to the probabilities that each domino in HAND will be vulnerable as a off.  Probably should factor in the 'dangerousness' of each suit.  (i.e. ThreeOne is a less dangerous off than FiveFour)"""
+    def calculateLeadProbability(self, hand, suit):
+        """Returns a list corresponding to the probabilities that each domino in HAND will be able to used as a winning lead, assuming SUIT is trump"""
+
+    def calculateOffProbability(self, hand, suit):
+        """Returns a list corresponding to the probabilities that each domino in HAND will be vulnerable as a off.  Probably should factor in the 'dangerousness' of each suit.  (i.e. ThreeOne is a less dangerous off than FiveFour)"""
