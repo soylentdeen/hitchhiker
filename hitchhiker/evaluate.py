@@ -57,9 +57,9 @@ class bidEvaluation( object ):
     def evaluate(self):
         self.trumpControl = self.controlProbability(self.trump)
         print self.trumpControl
-        self.offs = self.calculateOffs()
+        self.calculateOffs()
         print self.offs
-        self.leadingOffs = self.calculateLeadingOffs()
+        self.calculateLeadingOffs()
         print self.leadingOffs
         
     def distribute(self, bones, h1, h2, h3, nleads, trumps):
