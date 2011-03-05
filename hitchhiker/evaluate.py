@@ -48,6 +48,39 @@ class Fraction( object ):
         self.value = num/denom
         return self.value
 
+class playEvaluation( object ):
+    ''' This obejct can be used by any player to calculate legal/winning plays from their hand '''
+    def __init__(self, trump, objective):
+        self.trump = trump
+        self.played = []   #Dominoes which are already out
+
+    def findLegalPlays(self, hand, suit):
+        trickSuit = suit
+        #find if we have any of the suit
+        legalPlays = []
+        #If suit is NOT trump
+        if (self.trump.value != trickSuit.value):
+            for b in hand:
+                if trickSuit.includes(b) and not(self.trump.includes(b)):
+                    legalPlays.append(b)
+            # If we don't have any dominoes of the suit, we can play trump, so look for trump
+            if len(legalPlays) == 0:
+                for b in hand:
+                    if self.trump.includes(b):
+                        legalPlays.append(b)
+        else:
+            for b in hand:
+                if self.trump.includes(b):
+                    legalPlays.append(b)
+
+        return self.self.legalPlays
+
+    def findWinningPlays(self, suit):
+        trickSuit = suit
+
+    def addPlayedDomino(self, bone):
+        self.played.append(bone)
+
 
 class bidEvaluation( object ):
     def __init__(self, hand, trump):
@@ -193,6 +226,8 @@ class bidEvaluation( object ):
 
         P_control = float(probability[0])/float(probability[-1])
         P_majority = float(probability[1])/float(probability[-1])
+
+        #if P_control < 0.001
 
         return (P_control, P_majority)
 

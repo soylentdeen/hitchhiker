@@ -15,6 +15,7 @@ class Player( object ):
         self.hand = None                #
         self.name = name                #  Name of player
         self.team = team                #
+        self.trick_evaluation = None    #  trick_evaluation object
 
     def __repr__( self ):
         return 'Player(%s)' % self.name
@@ -56,6 +57,7 @@ class Player( object ):
         print
         print 'trick is: %s' % ( trick.dump() )
         print '%s has: %s' % ( self.name, self.hand.dump() )
+        print 'legal moves are %s' % ( self.
         identity = eval( raw_input( 'Play: ' ) )
 
         bone = self.hand.play( identity )
@@ -230,6 +232,9 @@ class Round( object ):
         else:
             if not self.bid:
                 return None
+            else:
+                for player in self.players:
+                    player.trick_evaluation = evaluate.playEvaluation(
 
         # identify the number of marks for this hand, then normalize the bid value
         target = self.bid.bid
