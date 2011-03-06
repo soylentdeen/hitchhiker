@@ -57,7 +57,7 @@ class Player( object ):
         print
         print 'trick is: %s' % ( trick.dump() )
         print '%s has: %s' % ( self.name, self.hand.dump() )
-        print 'legal moves are %s' % ( self.
+        #print 'legal moves are %s' % ( self.
         identity = eval( raw_input( 'Play: ' ) )
 
         bone = self.hand.play( identity )
