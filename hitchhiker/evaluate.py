@@ -89,11 +89,11 @@ class bidEvaluation( object ):
 
     def evaluate(self):
         self.trumpControl = self.controlProbability(self.trump)
-        print self.trumpControl
+        print(self.trumpControl)
         self.calculateOffs()
-        print self.offs
+        print(self.offs)
         self.calculateLeadingOffs()
-        print self.leadingOffs
+        print(self.leadingOffs)
         
     def distribute(self, bones, h1, h2, h3, nleads, trumps):
         """ Calculates all possible hands with the remaining trumps, figuring out which hands can wrest control from the bidder's hand. """

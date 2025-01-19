@@ -8,7 +8,7 @@ alpha.add( 'Jordan', None )
 beta = Team( 'Beta' )
 beta.add( 'Terry', None )
 beta.add( 'Bill', None )
-print "Hi"
+print("Hi")
 game = Game( alpha, beta )
 round = Round( game, 1, game.players )
 round.run()

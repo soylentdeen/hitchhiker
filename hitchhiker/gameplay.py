@@ -26,9 +26,8 @@ class Player( object ):
     def offer( self, round ):
         """Offer a bid for the specified round."""
 
-        print
-        print '%s has: %s' % ( self.name, self.hand.dump() )
-        print '                             : CONTROL : MAJORITY'
+        print('%s has: %s' % ( self.name, self.hand.dump() ))
+        print('                             : CONTROL : MAJORITY')
         evaluation = []
         for s in [Suits['blanks'], Suits['ones'], Suits['twos'], Suits['threes'], Suits['fours'], Suits['fives'], Suits['sixes']]:
             evaluation.append(bidEvaluation(self.hand, s))
@@ -46,17 +45,15 @@ class Player( object ):
         #bid = []
         #for e in evaluation:
         #    bid.append(e[0], calcBid(e))
-        bid = raw_input( 'Bid (enter to pass): ' )
+        bid = input( 'Bid (enter to pass): ' )
         if bid:
-            trump = raw_input( 'Trump: ' )
+            trump = input( 'Trump: ' )
             return Bid( self, TrumpContract( Suits[ trump ] ), int( bid ) )
 
     def play( self, trick ):
         """Plays a bone in the specified trick."""
-
-        print
-        print 'trick is: %s' % ( trick.dump() )
-        print '%s has: %s' % ( self.name, self.hand.dump() )
+        print('trick is: %s' % ( trick.dump() ))
+        print('%s has: %s' % ( self.name, self.hand.dump() ))
         #print 'legal moves are %s' % ( self.
         identity = eval( raw_input( 'Play: ' ) )
 
@@ -110,7 +107,7 @@ class Hand( object ):
 
     def dump( self ):
         """ Prints a String representation for the bones left in the hand. """
-        return ' '.join([ repr( bone ) for bone in self.hand.itervalues() ])
+        return ' '.join([ repr( bone ) for bone in self.hand.items() ])
 
     def play( self, identity ):
         """Plays a bone from this hand."""
@@ -178,11 +175,11 @@ class Trick( object ):
         self.value += bone.value
         if self.winning_play:                # If this NOT is the first bone in the trick, figure out if it is a winner
             self.round.bid.contract.adjudicate( self, player, play )
-            print 'bone is a %s' % play.role
+            print('bone is a %s' % play.role)
         else:                                # else, THIS is the winning play, by default, as it is the first bone in the trick
             play.role = 'suit'
             self.suit, self.winning_play, self.winning_player = play.suit, play, player
-            print 'trick suit is %s' % self.suit.identity
+            print('trick suit is %s' % self.suit.identity)
 
 class Round( object ):
     """A round in a particular game."""
@@ -223,7 +220,7 @@ class Round( object ):
         """Runs this round."""
 
         # deal a hand to each player, then collect the bids
-        print '%r vs. %r' % ( self.game.home, self.game.away )
+        print('%r vs. %r' % ( self.game.home, self.game.away ))
         self.deal()
         for player in self.players:
             bid = player.offer( self )
@@ -234,7 +231,7 @@ class Round( object ):
                 return None
             else:
                 for player in self.players:
-                    player.trick_evaluation = evaluate.playEvaluation(
+                    player.trick_evaluation = evaluate.playEvaluation()
 
         # identify the number of marks for this hand, then normalize the bid value
         target = self.bid.bid
@@ -260,11 +257,11 @@ class Round( object ):
             # associate the trick with this round and determine if the round is over
             self.tricks.append( trick )
             if self.points_made >= target:
-                print 'BID WAS MADE'
+                print('BID WAS MADE')
                 self.status = 'made'
                 break
             elif self.points_set >= ( 43 - target ):
-                print 'BID WAS SET'
+                print('BID WAS SET')
                 self.status = 'set'
                 break
 
